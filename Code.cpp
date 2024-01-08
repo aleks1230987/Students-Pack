@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 
@@ -9,6 +10,7 @@ public:
 	string Name;
 	vector <int> grades;
 	vector <string> subjects;
+	string ParentName = " ";
 	student() {
 		Name = "NoName";
 	}
@@ -71,21 +73,24 @@ public:
 	bool Mood = true;// true - хорошее, false - плохое
 	int NumberOfGrades = 0;
 	int TypeOfMoodChange = rand() % 3; // 0 - настроения меняется после 5 оценки, 1 - настроения меняется после 3 оценки, 2 - настроения меняется после 7 оценки
+	string className;
 
 	teacher() {
 		Name = "NoName";
+		className = "Unknown";
 	}
 
-	teacher(string name, bool mood) {
+	teacher(string name, bool mood, string classname) {
 		Name = name;
 		Mood = mood;
+		className = classname;
 	}
 
 	void GetInfo() {
 		cout << Name << " " << Mood << " " << TypeOfMoodChange << " " << NumberOfGrades << endl;
 	}
 
-	void GiveGrade(student* student,string subName) {
+	void GiveGrade(student* student) {
 		int n;
 		int r = rand() % 2;
 		if (TypeOfTeacher == 1) {
@@ -119,7 +124,7 @@ public:
 			}
 		}
 		
-		student->TakeGrade(n, subName);
+		student->TakeGrade(n, className);
 		NumberOfGrades++;
 		int ChanceOfReverse = rand() % 2;// 0 - противоположное, 1 - не изменяется
 		if ((TypeOfMoodChange == 0 and NumberOfGrades == 5) or (TypeOfMoodChange == 1 and NumberOfGrades == 3) or (TypeOfMoodChange == 2 and NumberOfGrades == 7)) {
@@ -144,9 +149,7 @@ public:
 	string Name;
 	teacher* Teacher;
 	vector <student*> Group;
-	lesson() {
-		Name = "NoLesson";
-	}
+
 	lesson(teacher* teacher1, vector <student*> group, string name) {
 		Teacher = teacher1;
 		Group = group;
@@ -161,7 +164,7 @@ public:
 				int r = rand() % 2;
 				while (r != 0) {
 					r = rand() % 2;
-					Teacher->GiveGrade(Group[i], Name);
+					Teacher->GiveGrade(Group[i]);
 				}
 				i++;
 			}
@@ -188,6 +191,7 @@ public:
 
 	void AddChild(student* child) {
 		children.push_back(child);
+		child->ParentName = Name;
 	}
 
 	bool IsOwnChild(student* child) {
@@ -304,4 +308,106 @@ public:
 		}
 		cout << "У меня нет ребёнка с таким именем" << endl;
 	}
+
+	void TellWithSubject(string sbj) {
+		int i = 0;
+		if (!children.empty()) {
+			while (i < children.size()) {
+				if (!children[i]->subjects.empty()) {
+					int k = 0;
+					while (k < children[i]->subjects.size()) {
+						if (children[i]->subjects[k] == Name) {
+							if (children[i]->IsExelent() and Mood == 1) {
+								cout << children[i]->Name << " гениальный ребёнок" << endl;
+							}
+							else if (children[i]->IsExelent() and Mood == 0) {
+								cout << children[i]->Name << " учится хорошо" << endl;
+							}
+							else if (!children[i]->IsExelent() and Mood == 1) {
+								cout << children[i]->Name << " старается изо всех сил" << endl;
+							}
+							else {
+								cout << children[i]->Name << " учится плохо" << endl;
+							}
+							break;
+						}
+						k++;
+					}
+				}
+				i++;
+			}
+		}
+		else {
+			cout << "У меня нет детей" << endl;
+		}
+	}
+};
+
+
+class meeting {
+public:
+	vector <string> subjectName;
+	vector <teacher*> LessonTeachers;
+	vector <parent*> parents;
+	vector <teacher*> TeachersNow;
+	vector <student*> students;
+	vector <lesson*> lessons;
+	vector <string> ParentNames;
+
+	void addLesson(lesson* lesson) {
+		subjectName.push_back(lesson->Name);
+		lessons.push_back(lesson);
+		if (!lesson->Group.empty()) {
+			int i = 0;
+			while (i < lesson->Group.size()) {
+				students.push_back(lesson->Group[i]);
+				i++;
+			}
+		}
+	}
+	void addParent(parent* parent) {
+		parents.push_back(parent);
+		ParentNames.push_back(parent->Name);
+	}
+	void addTeacher(teacher* teacher) {
+		TeachersNow.push_back(teacher);
+	}
+
+
+	void MakeList() {
+		cout << "Список отсутствующих родителей: ";
+		bool flag = false;
+		for (int i = 0; i < students.size(); i++) {
+			if (ParentNames.end() == find(ParentNames.begin(), ParentNames.end(), students[i]->ParentName)) {
+				flag = true;
+				cout << students[i]->ParentName << "  ";
+			}
+		}
+		if (flag == false) {
+			cout << "Все присутствуют";
+		}
+		cout << endl;
+	}
+
+	void ParentTell() {
+		for (int i = 0; i < lessons.size(); i++) {
+			if (TeachersNow.end() == find(TeachersNow.begin(), TeachersNow.end(), lessons[i]->Teacher)) {
+				cout << lessons[i]->Teacher->Name << " отсутствует" << endl;
+			}
+			else {
+				cout << "Урок " << lessons[i]->Name << endl;
+				for (int j = 0; j < parents.size(); j++) {
+					cout << parents[j]->Name << " говорит:" << endl;
+					for (int k = 0; k < parents[j]->children.size(); k++) {
+						if (students.end() != find(students.begin(), students.end(), parents[j]->children[k])) {
+							parents[j]->TellAboutOne(parents[j]->children[k]->Name);
+						}
+					}
+					cout << endl;
+				}
+				cout << endl;
+			}
+		}
+	}
+
 };
