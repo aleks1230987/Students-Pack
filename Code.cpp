@@ -105,3 +105,44 @@ public:
 		student->TakeGrade(n, subName);
 	}
 };
+
+class GroupOfStudents {
+public:
+	vector <student*> group;
+	void AddStudent(student* stud) {
+		group.push_back(stud);
+	}
+};
+
+class lesson {
+public:
+	string Name;
+	teacher* Teacher;
+	vector <student*> Group;
+	lesson() {
+		Name = "NoLesson";
+	}
+	lesson(teacher* teacher1, vector <student*> group, string name) {
+		Teacher = teacher1;
+		Group = group;
+		Name = name;
+	}
+
+	void GiveMarks() {
+		int i = 0;
+
+		if (!Group.empty()) {
+			while (i < Group.size()) {
+				int r = rand() % 2;
+				while (r != 0) {
+					r = rand() % 2;
+					Teacher->GiveGrade(Group[i], Name);
+				}
+				i++;
+			}
+		}
+		else {
+			cout << "На занятии отсутствуют студенты" << endl;
+		}
+	}
+};
