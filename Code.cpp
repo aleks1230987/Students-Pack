@@ -171,3 +171,137 @@ public:
 		}
 	}
 };
+
+class parent {
+public:
+	string Name;
+	int Mood; //0 - плохое настроение, 1 - хорошее
+	vector <student*> children;
+	parent() {
+		Name = "NoName";
+		Mood = rand() % 2;
+	}
+	parent(string name) {
+		Name = name;
+		Mood = rand() % 2;
+	}
+
+	void AddChild(student* child) {
+		children.push_back(child);
+	}
+
+	bool IsOwnChild(student* child) {
+		int i = 0;
+		if (!children.empty()) {
+			while (i < children.size()) {
+				if (children[i] == child) {
+					return true;
+				}
+				i++;
+			}
+		}
+		return false;
+	}
+
+	void TellAboutAll() {
+		int i = 0;
+		if (!children.empty()) {
+			while (i < children.size()) {
+				if (children[i]->IsExelent() and Mood == 1) {
+					cout << children[i]->Name << " гениальный ребёнок" << endl;
+				}
+				else if (children[i]->IsExelent() and Mood == 0) {
+					cout << children[i]->Name << " учится хорошо" << endl;
+				}
+				else if (!children[i]->IsExelent() and Mood == 1) {
+					cout << children[i]->Name << " старается изо всех сил" << endl;
+				}
+				else {
+					cout << children[i]->Name << " учится плохо" << endl;
+				}
+				i++;
+			}
+		}
+		else {
+			cout << "У меня нет детей" << endl;
+		}
+	}
+
+	void TellRandom() {
+		if (!children.empty()) {
+			int i = rand() % (children.size());
+			if (children[i]->IsExelent() and Mood == 1) {
+				cout << children[i]->Name << " гениальный ребёнок" << endl;
+			}
+			else if (children[i]->IsExelent() and Mood == 0) {
+				cout << children[i]->Name << " учится хорошо" << endl;
+			}
+			else if (!children[i]->IsExelent() and Mood == 1) {
+				cout << children[i]->Name << " старается изо всех сил" << endl;
+			}
+			else {
+				cout << children[i]->Name << " учится плохо" << endl;
+			}
+		}
+		else {
+			cout << "У меня нет детей" << endl;
+		}
+	}
+
+	void TellSum() {
+		int i = 0;
+		if (!children.empty()) {
+			double sum = 0;
+			while (i < children.size()) {
+				if (children[i]->IsExelent()) { 
+					sum++; 
+				}
+				i++;
+			}
+			sum = sum / children.size();
+			if (sum>=0.5 and Mood == 1) {
+				cout << "Мои дети гении" << endl;
+			}
+			else if (sum >= 0.5 and Mood == 0) {
+				cout << children[i]->Name << "Мои дети учатся хорошо" << endl;
+			}
+			else if (sum < 0.5 and Mood == 1) {
+				cout << children[i]->Name << "Мои дети стараются изо всех сил" << endl;
+			}
+			else {
+				cout << children[i]->Name << "Мои дети учатся плохо" << endl;
+			}
+		}
+		else {
+			cout << "У меня нет детей" << endl;
+		}
+	}
+
+	void TellAboutOne(string name) {
+		int i = 0;
+		if (!children.empty()) {
+			while (i < children.size()) {
+				if (children[i]->Name == name) {
+					if (children[i]->IsExelent() and Mood == 1) {
+						cout << children[i]->Name << " гениальный ребёнок" << endl;
+					}
+					else if (children[i]->IsExelent() and Mood == 0) {
+						cout << children[i]->Name << " учится хорошо" << endl;
+					}
+					else if (!children[i]->IsExelent() and Mood == 1) {
+						cout << children[i]->Name << " старается изо всех сил" << endl;
+					}
+					else {
+						cout << children[i]->Name << " учится плохо" << endl;
+					}
+					return;
+				}
+				i++;
+			}
+		}
+		else {
+			cout << "У меня нет детей" << endl;
+		}
+		cout << "У меня нет ребёнка с таким именем" << endl;
+	}
+};
