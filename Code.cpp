@@ -64,3 +64,44 @@ public:
 		
 	}
 };
+
+class teacher {
+public:
+	string Name;
+	bool Mood = true;// true - хорошее, false - плохое
+	teacher() {
+		Name = "NoName";
+	}
+	teacher(string name, bool mood) {
+		Name = name;
+		Mood = mood;
+	}
+
+	void GiveGrade(student* student,string subName) {
+		int n;
+		int r = rand() % 2;
+		if (Mood and student->IsExelent()) {
+			n = 5;
+		}
+		else if (!Mood and student->IsExelent()) {
+			if (r == 1) {
+				n = 5;
+			}
+			else {
+				n = 4;
+			}
+		}
+		else if (Mood and ((student->IsExelent()) == false)) {
+			n = 4;
+		}
+		else {
+			if (r == 1) {
+				n = 3;
+			}
+			else {
+				n = 2;
+			}
+		}
+		student->TakeGrade(n, subName);
+	}
+};
