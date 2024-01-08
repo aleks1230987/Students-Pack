@@ -51,7 +51,6 @@ public:
 			}
 		}
 		else {
-			cout << "У студента нет оценок" << endl;
 			return false;
 		}
 		sum = sum / k;
@@ -70,7 +69,8 @@ public:
 	string Name;
 	int TypeOfTeacher = rand() % 3; // 0 - зависит от настроения, 1 - всегда ставит 5, 2 - всегда ставит 2
 	bool Mood = true;// true - хорошее, false - плохое
-
+	int NumberOfGrades = 0;
+	int TypeOfMoodChange = rand() % 3; // 0 - настроения меняется после 5 оценки, 1 - настроения меняется после 3 оценки, 2 - настроения меняется после 7 оценки
 
 	teacher() {
 		Name = "NoName";
@@ -79,6 +79,10 @@ public:
 	teacher(string name, bool mood) {
 		Name = name;
 		Mood = mood;
+	}
+
+	void GetInfo() {
+		cout << Name << " " << Mood << " " << TypeOfMoodChange << " " << NumberOfGrades << endl;
 	}
 
 	void GiveGrade(student* student,string subName) {
@@ -116,6 +120,14 @@ public:
 		}
 		
 		student->TakeGrade(n, subName);
+		NumberOfGrades++;
+		int ChanceOfReverse = rand() % 2;// 0 - противоположное, 1 - не изменяется
+		if ((TypeOfMoodChange == 0 and NumberOfGrades == 5) or (TypeOfMoodChange == 1 and NumberOfGrades == 3) or (TypeOfMoodChange == 2 and NumberOfGrades == 7)) {
+			if (ChanceOfReverse == 0) {
+				Mood = !Mood;
+			}
+			NumberOfGrades = 0;
+		}
 	}
 };
 
