@@ -68,10 +68,14 @@ public:
 class teacher {
 public:
 	string Name;
+	int TypeOfTeacher = rand() % 3; // 0 - зависит от настроения, 1 - всегда ставит 5, 2 - всегда ставит 2
 	bool Mood = true;// true - хорошее, false - плохое
+
+
 	teacher() {
 		Name = "NoName";
 	}
+
 	teacher(string name, bool mood) {
 		Name = name;
 		Mood = mood;
@@ -80,28 +84,37 @@ public:
 	void GiveGrade(student* student,string subName) {
 		int n;
 		int r = rand() % 2;
-		if (Mood and student->IsExelent()) {
+		if (TypeOfTeacher == 1) {
 			n = 5;
 		}
-		else if (!Mood and student->IsExelent()) {
-			if (r == 1) {
-				n = 5;
-			}
-			else {
-				n = 4;
-			}
-		}
-		else if (Mood and ((student->IsExelent()) == false)) {
-			n = 4;
+		else if (TypeOfTeacher == 2) {
+			n = 2;
 		}
 		else {
-			if (r == 1) {
-				n = 3;
+			if (Mood and student->IsExelent()) {
+				n = 5;
+			}
+			else if (!Mood and student->IsExelent()) {
+				if (r == 1) {
+					n = 5;
+				}
+				else {
+					n = 4;
+				}
+			}
+			else if (Mood and ((student->IsExelent()) == false)) {
+				n = 4;
 			}
 			else {
-				n = 2;
+				if (r == 1) {
+					n = 3;
+				}
+				else {
+					n = 2;
+				}
 			}
 		}
+		
 		student->TakeGrade(n, subName);
 	}
 };
